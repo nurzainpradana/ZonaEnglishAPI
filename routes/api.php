@@ -17,3 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('commoncode','CommonCodeController@index');
+Route::post('commoncode','CommonCodeController@create');
+Route::put('/commoncode/{hcode}','CommonCodeController@update');
+Route::delete('/commoncode/{hcode}','CommonCodeController@delete');
+
+// Get Video Belajar List
+Route::get('getvideobelajarlist','CommonCodeController@getVideoBelajarList');
+
+// Get Level List
+Route::get('getlevellist','CommonCodeController@getLevelList');

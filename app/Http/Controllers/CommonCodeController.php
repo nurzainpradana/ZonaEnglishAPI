@@ -9,7 +9,24 @@ class CommonCodeController extends Controller
 {
     // Get Data Common Code
     public function index() {
-        return DB::table('tb_common_code as cc');
+        return DB::table('tb_common_code as cc')->get();
+    }
+
+    // Get Video Belajar List
+    public function getVideoBelajarList() {
+        return DB::table('tb_common_code as cc')
+        ->where('hcode','=','VBL')
+        ->where('hcode','!=','*')
+        ->get();
+    }
+
+    
+    // Get Level List
+    public function getLevelList() {
+        return DB::table('tb_common_code as cc')
+        ->where('hcode','=','LV')
+        ->where('hcode','!=','*')
+        ->get();
     }
 
     public function create(request $request){
