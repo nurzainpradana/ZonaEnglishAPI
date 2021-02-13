@@ -27,19 +27,22 @@ class CommonCodeController extends Controller
                 } else {
                     return response()->json([
                         'message' => 'failed',
-                        'code' => 204
+                        'code' => 204,
+                        'data' => null
                     ]);
                 }
             } else {
                 return response()->json([
-                    'failed' => 'success',
-                    'code' => 401
+                    'message' => 'failed',
+                    'code' => 401,
+                    'data' => null
                 ]);
             }
         }
         return response()->json([
-            'failed' => 'success',
-            'code' => 404
+            'message' => 'failed',
+            'code' => 404,
+            'data' => null
         ]);
     }
 
@@ -68,27 +71,19 @@ class CommonCodeController extends Controller
                 }
             } else {
                 return response()->json([
-                    'failed' => 'success',
+                    'message' => 'failed',
                     'code' => 401
                 ]);
             }
         }
         return response()->json([
-            'failed' => 'success',
+            'message' => 'failed',
             'code' => 404
         ]);
     }
 
-    // Get Video By Type
-    public function getVideoByType()
-    {
-        $query = DB::table('tb_common_code')
-            ->where('hcode', '=', 'LV')
-            ->where('hcode', '!=', '*')
-            ->get();
 
-        return json_encode($query);
-    }
+
 
     public function create(request $request)
     {

@@ -23,8 +23,16 @@ Route::post('commoncode','CommonCodeController@create');
 Route::put('/commoncode/{hcode}','CommonCodeController@update');
 Route::delete('/commoncode/{hcode}','CommonCodeController@delete');
 
-// Get Video Belajar List
+// TABLE COMMON CODE
+// Get Type Video List
 Route::get('gettypevideolist','CommonCodeController@getTypeVideoList');
-
 // Get Level List
 Route::get('getlevellist','CommonCodeController@getLevelList');
+
+// TABLE VIDEO TUTORIAL
+// Get Video Tutorial List By Type
+Route::get('getvideolistbytype','VideoTutorialController@getVideoListByType');
+// Get Video Tutorial List By Type & Level
+Route::get('getvideolistbytypelevel','VideoTutorialController@getVideoListByTypeLevel');
+// Get Video Detail
+Route::get('getvideodetail','VideoTutorialController@getVideoDetail');
