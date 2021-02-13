@@ -93,6 +93,7 @@ class VideoTutorialController extends Controller
             if (isset($_GET['code']) && $_GET['api_token'] == 'zonaenglish2021!') {
                 $data = DB::table('tb_video_tutorial')
                     ->where('code', '=', $_GET['code'])
+                    ->select(DB::raw('*, fn_get_level_name(level) as level_name, fn_get_type_video_name(type) as type_name'))
                     ->get();
 
                 if (!$data->isEmpty()) {
