@@ -36,3 +36,9 @@ Route::get('getvideolistbytype','VideoTutorialController@getVideoListByType');
 Route::get('getvideolistbytypelevel','VideoTutorialController@getVideoListByTypeLevel');
 // Get Video Detail
 Route::get('getvideodetail','VideoTutorialController@getVideoDetail');
+
+// TABLE INFO PROMO
+// Get Info Promo List
+Route::get('getinfopromolist','InfoPromoController@getInfoPromoList');
+// Get Info Promo Detail
+Route::get('getinfopromodetail','InfoPromoController@getInfoPromoDetail');
