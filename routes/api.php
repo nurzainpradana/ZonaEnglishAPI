@@ -27,4 +27,4 @@ Route::delete('/commoncode/{hcode}','CommonCodeController@delete');
 Route::get('gettypevideolist','CommonCodeController@getTypeVideoList');
 
 // Get Level List
-Route::get('getlevellist','CommonCodeController@getLevel');
+Route::get('getlevellist','CommonCodeController@getLevelList');

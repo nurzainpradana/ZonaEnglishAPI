@@ -7,53 +7,94 @@ use Illuminate\Http\Request;
 
 class CommonCodeController extends Controller
 {
-    // Get Data Common Code
-    public function index() {
-        $query = DB::table('tb_common_code as cc')->get();
-        // return response()->json(['message' => 'success', 'data' => $query])->setCallback(Input::get('callback'));
-        // return json_encode($query);
+    // Get Video Belajar List
+    public function getTypeVideoList()
+    {
+        if ($_GET != null) {
+            // Verification API Token
+            if (isset($_GET['api_token']) && $_GET['api_token'] == 'zonaenglish2021!') {
+                $data = DB::table('tb_common_code as ct')
+                    ->where('hcode', '=', 'TY')
+                    ->where('code', '!=', '*')
+                    ->get();
+
+                if (!$data->isEmpty()) {
+                    return response()->json([
+                        'message' => 'success',
+                        'code' => 200,
+                        'data' => $data
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'failed',
+                        'code' => 204
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'failed' => 'success',
+                    'code' => 401
+                ]);
+            }
+        }
+        return response()->json([
+            'failed' => 'success',
+            'code' => 404
+        ]);
     }
 
     // Get Video Belajar List
-    public function getTypeVideoList() {
-        $data = DB::table('tb_common_code as ct')
-        ->where('hcode','=','TYR')
-        ->where('code','!=','*')
-        ->get();
+    public function getLevelList()
+    {
+        if ($_GET != null) {
+            // Verification API Token
+            if (isset($_GET['api_token']) && $_GET['api_token'] == 'zonaenglish2021!') {
+                $data = DB::table('tb_common_code as ct')
+                    ->where('hcode', '=', 'LV')
+                    ->where('code', '!=', '*')
+                    ->get();
 
-        if(!$data->isEmpty()){
-            return response()->json(['message' => 'success', 
-            'code' => 200,
-            'data' => $data]);
-        } else {
-            return response()->json(['message' => 'failed',
-            'code' => 204,
-            'data' => $data]);
+                if (!$data->isEmpty()) {
+                    return response()->json([
+                        'message' => 'success',
+                        'code' => 200,
+                        'data' => $data
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'failed',
+                        'code' => 204
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'failed' => 'success',
+                    'code' => 401
+                ]);
+            }
         }
-    }
-    
-    // Get Level List
-    public function getLevelList() {
-        return DB::table('tb_common_code as cc')
-        ->where('hcode','=','LV')
-        ->where('hcode','!=','*')
-        ->get();
+        return response()->json([
+            'failed' => 'success',
+            'code' => 404
+        ]);
     }
 
     // Get Video By Type
-    public function getVideoByType() {
+    public function getVideoByType()
+    {
         $query = DB::table('tb_common_code')
-        ->where('hcode','=','LV')
-        ->where('hcode','!=','*')
-        ->get();
+            ->where('hcode', '=', 'LV')
+            ->where('hcode', '!=', '*')
+            ->get();
 
         return json_encode($query);
     }
 
-    public function create(request $request){
+    public function create(request $request)
+    {
         $commoncode = DB::table('tb_common_code')->insert([
             'hcode' => $request->hcode,
-            'code' => $request->code, 
+            'code' => $request->code,
             'name' => $request->name,
             'remark_1' => $request->remark_1,
             'remark_2' => $request->remark_2
@@ -65,35 +106,35 @@ class CommonCodeController extends Controller
         }
     }
 
-    public function update(request $request, $id) {
+    public function update(request $request, $id)
+    {
         $query = DB::table('tb_common_code')
-        ->where('hcode','=',$request->hcode)
-        ->update([
-            'hcode' => $request->hcode,
-            'code' => $request->code, 
-            'name' => $request->name,
-            'remark_1' => $request->remark_1,
-            'remark_2' => $request->remark_2,
-        ]);
+            ->where('hcode', '=', $request->hcode)
+            ->update([
+                'hcode' => $request->hcode,
+                'code' => $request->code,
+                'name' => $request->name,
+                'remark_1' => $request->remark_1,
+                'remark_2' => $request->remark_2,
+            ]);
 
-        if($query) {
+        if ($query) {
             return "Data berhasil di update";
         } else {
             return "Data gagal di update";
         }
     }
 
-    public function delete($hcode){
+    public function delete($hcode)
+    {
         $query = DB::table("tb_common_code")
-        -> where ('hcode','=',$hcode)
-        ->delete();
+            ->where('hcode', '=', $hcode)
+            ->delete();
 
-        if($query) {
+        if ($query) {
             return "Data berhasil dihapus";
         } else {
             return "Data gagal dihapus";
         }
     }
-
-
 }
