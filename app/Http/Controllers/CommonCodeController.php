@@ -10,22 +10,30 @@ class CommonCodeController extends Controller
     // Get Data Common Code
     public function index() {
         $query = DB::table('tb_common_code as cc')->get();
-        
-        return json_encode($query);
-        
+        // return response()->json(['message' => 'success', 'data' => $query])->setCallback(Input::get('callback'));
+        // return json_encode($query);
     }
 
     // Get Video Belajar List
-    public function getTypeVideo() {
-        return DB::table('tb_common_code as cc')
-        ->where('hcode','=','TY')
-        ->where('hcode','!=','*')
+    public function getTypeVideoList() {
+        $data = DB::table('tb_common_code as ct')
+        ->where('hcode','=','TYR')
+        ->where('code','!=','*')
         ->get();
 
+        if(!$data->isEmpty()){
+            return response()->json(['message' => 'success', 
+            'code' => 200,
+            'data' => $data]);
+        } else {
+            return response()->json(['message' => 'failed',
+            'code' => 204,
+            'data' => $data]);
+        }
     }
     
     // Get Level List
-    public function getLevel() {
+    public function getLevelList() {
         return DB::table('tb_common_code as cc')
         ->where('hcode','=','LV')
         ->where('hcode','!=','*')
@@ -34,7 +42,7 @@ class CommonCodeController extends Controller
 
     // Get Video By Type
     public function getVideoByType() {
-        $query = DB::table('tb_common_code as cc')
+        $query = DB::table('tb_common_code')
         ->where('hcode','=','LV')
         ->where('hcode','!=','*')
         ->get();
