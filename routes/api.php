@@ -40,5 +40,7 @@ Route::get('getvideodetail','VideoTutorialController@getVideoDetail');
 // TABLE INFO PROMO
 // Get Info Promo List
 Route::get('getinfopromolist','InfoPromoController@getInfoPromoList');
+// Get Info Promo Top List
+Route::get('getinfopromotoplist','InfoPromoController@getInfoPromoTopList');
 // Get Info Promo Detail
 Route::get('getinfopromodetail','InfoPromoController@getInfoPromoDetail');
