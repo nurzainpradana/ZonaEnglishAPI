@@ -7,6 +7,25 @@ use Illuminate\Http\Request;
 
 class CommonCodeController extends Controller
 {
+    // WEB ADMIN
+    public function commonCode()
+    {
+        $name = session('name');
+        $role = session('role');
+
+        $common_code = CommonCode::orderBy('hcode', 'ASC')
+            ->orderBy('code', 'ASC')
+            ->get();
+        return view('commoncode/v_common_code', [
+            'common_code' => $common_code,
+            'name' => $name,
+            'role' => $role
+        ]);
+    }
+
+
+    // API
+
     // Get Video Belajar List
     public function getTypeVideoList()
     {
