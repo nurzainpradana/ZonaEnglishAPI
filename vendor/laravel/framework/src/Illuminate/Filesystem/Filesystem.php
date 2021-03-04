@@ -33,7 +33,7 @@ class Filesystem
      */
     public function missing($path)
     {
-        return ! $this->exists($path);
+        return !$this->exists($path);
     }
 
     /**
@@ -169,7 +169,7 @@ class Filesystem
     public function prepend($path, $data)
     {
         if ($this->exists($path)) {
-            return $this->put($path, $data.$this->get($path));
+            return $this->put($path, $data . $this->get($path));
         }
 
         return $this->put($path, $data);
@@ -217,7 +217,7 @@ class Filesystem
 
         foreach ($paths as $path) {
             try {
-                if (! @unlink($path)) {
+                if (!@unlink($path)) {
                     $success = false;
                 }
             } catch (ErrorException $e) {
@@ -261,13 +261,13 @@ class Filesystem
      */
     public function link($target, $link)
     {
-        if (! windows_os()) {
+        if (!windows_os()) {
             return symlink($target, $link);
         }
 
         $mode = $this->isDirectory($target) ? 'J' : 'H';
 
-        exec("mklink /{$mode} ".escapeshellarg($link).' '.escapeshellarg($target));
+        exec("mklink /{$mode} " . escapeshellarg($link) . ' ' . escapeshellarg($target));
     }
 
     /**
@@ -322,7 +322,7 @@ class Filesystem
      */
     public function guessExtension($path)
     {
-        if (! class_exists(MimeTypes::class)) {
+        if (!class_exists(MimeTypes::class)) {
             throw new RuntimeException(
                 'To enable support for guessing extensions, please install the symfony/mime package.'
             );
@@ -441,7 +441,7 @@ class Filesystem
     public function files($directory, $hidden = false)
     {
         return iterator_to_array(
-            Finder::create()->files()->ignoreDotFiles(! $hidden)->in($directory)->depth(0)->sortByName(),
+            Finder::create()->files()->ignoreDotFiles(!$hidden)->in($directory)->depth(0)->sortByName(),
             false
         );
     }
@@ -456,7 +456,7 @@ class Filesystem
     public function allFiles($directory, $hidden = false)
     {
         return iterator_to_array(
-            Finder::create()->files()->ignoreDotFiles(! $hidden)->in($directory)->sortByName(),
+            Finder::create()->files()->ignoreDotFiles(!$hidden)->in($directory)->sortByName(),
             false
         );
     }
@@ -488,7 +488,7 @@ class Filesystem
      */
     public function ensureDirectoryExists($path, $mode = 0755, $recursive = true)
     {
-        if (! $this->isDirectory($path)) {
+        if (!$this->isDirectory($path)) {
             $this->makeDirectory($path, $mode, $recursive);
         }
     }
@@ -521,7 +521,7 @@ class Filesystem
      */
     public function moveDirectory($from, $to, $overwrite = false)
     {
-        if ($overwrite && $this->isDirectory($to) && ! $this->deleteDirectory($to)) {
+        if ($overwrite && $this->isDirectory($to) && !$this->deleteDirectory($to)) {
             return false;
         }
 
@@ -538,7 +538,7 @@ class Filesystem
      */
     public function copyDirectory($directory, $destination, $options = null)
     {
-        if (! $this->isDirectory($directory)) {
+        if (!$this->isDirectory($directory)) {
             return false;
         }
 
@@ -555,12 +555,12 @@ class Filesystem
             // As we spin through items, we will check to see if the current file is actually
             // a directory or a file. When it is actually a directory we will need to call
             // back into this function recursively to keep copying these nested folders.
-            $target = $destination.'/'.$item->getBasename();
+            $target = $destination . '/' . $item->getBasename();
 
             if ($item->isDir()) {
                 $path = $item->getPathname();
 
-                if (! $this->copyDirectory($path, $target, $options)) {
+                if (!$this->copyDirectory($path, $target, $options)) {
                     return false;
                 }
             }
@@ -569,7 +569,7 @@ class Filesystem
             // location and keep looping. If for some reason the copy fails we'll bail out
             // and return false, so the developer is aware that the copy process failed.
             else {
-                if (! $this->copy($item->getPathname(), $target)) {
+                if (!$this->copy($item->getPathname(), $target)) {
                     return false;
                 }
             }
@@ -589,7 +589,7 @@ class Filesystem
      */
     public function deleteDirectory($directory, $preserve = false)
     {
-        if (! $this->isDirectory($directory)) {
+        if (!$this->isDirectory($directory)) {
             return false;
         }
 
@@ -599,7 +599,7 @@ class Filesystem
             // If the item is a directory, we can just recurse into the function and
             // delete that sub-directory otherwise we'll just delete the file and
             // keep iterating through each file until the directory is cleaned.
-            if ($item->isDir() && ! $item->isLink()) {
+            if ($item->isDir() && !$item->isLink()) {
                 $this->deleteDirectory($item->getPathname());
             }
 
@@ -611,7 +611,7 @@ class Filesystem
             }
         }
 
-        if (! $preserve) {
+        if (!$preserve) {
             @rmdir($directory);
         }
 
@@ -628,7 +628,7 @@ class Filesystem
     {
         $allDirectories = $this->directories($directory);
 
-        if (! empty($allDirectories)) {
+        if (!empty($allDirectories)) {
             foreach ($allDirectories as $directoryName) {
                 $this->deleteDirectory($directoryName);
             }

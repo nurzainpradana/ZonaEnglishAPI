@@ -15,10 +15,10 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
+            'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:7'],
-            'name' => ['required', 'string'],
-            'no_phone' => ['required', 'int']
+            'no_phone' =>  ['required', 'int']
         ]);
 
         $data['password'] = Hash::make($request->password);
