@@ -12,13 +12,44 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
+    //Register Tanpa Nomor telephone
+    public function registerWithOutNoPhone(Request $request)
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:7'],
+        ]);
+
+        $data['password'] = Hash::make($request->password);
+
+        $user = User::create($data);
+
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'message' => 'The provided credentials are incorrect.',
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $accessToken = Auth::user()->createToken($request->email)->plainTextToken;
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $user,
+            'meta' => [
+                'token' => $accessToken
+            ]
+        ], Response::HTTP_CREATED);
+    }
+
+    //Register dengan no telephone
     public function register(Request $request)
     {
         $data = $request->validate([
             'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:7'],
-            'no_phone' =>  ['required', 'int']
+            'no_phone' => ['required', 'string']
         ]);
 
         $data['password'] = Hash::make($request->password);

@@ -24,7 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  * User Register, Login, Logout
  */
 Route::group(['prefix' => 'auth'], function () {
-    Route::post('/register', 'Auth\UserController@register');
+    Route::post('/registerWithOutNoPhone', 'Auth\UserController@registerWithOutNoPhone');
     Route::post('/login', 'Auth\UserController@login');
     Route::post('/loginEmail', 'Auth\UserController@loginEmail');
     Route::post('/logout', 'Auth\UserController@logout')
