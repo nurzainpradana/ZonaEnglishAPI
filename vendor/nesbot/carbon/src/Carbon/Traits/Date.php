@@ -1374,17 +1374,17 @@ trait Date
     /**
      * Returns the minutes offset to UTC if no arguments passed, else set the timezone with given minutes shift passed.
      *
-     * @param int|null $minuteOffset
+     * @param int|null $offset
      *
      * @return int|static
      */
-    public function utcOffset(int $minuteOffset = null)
+    public function utcOffset(int $offset = null)
     {
         if (\func_num_args() < 1) {
             return $this->offsetMinutes;
         }
 
-        return $this->setTimezone(CarbonTimeZone::createFromMinuteOffset($minuteOffset));
+        return $this->setTimezone(static::safeCreateDateTimeZone($offset / static::MINUTES_PER_HOUR));
     }
 
     /**

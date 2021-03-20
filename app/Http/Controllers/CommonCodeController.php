@@ -4,28 +4,121 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 class CommonCodeController extends Controller
 {
     // WEB ADMIN
-    public function commonCode()
+    public function index()
     {
-        $name = session('name');
-        $role = session('role');
-
-        $common_code = CommonCode::orderBy('hcode', 'ASC')
+        $common_code = DB::table('tb_common_code')
+            ->orderBy('hcode', 'ASC')
             ->orderBy('code', 'ASC')
             ->get();
         return view('commoncode/v_common_code', [
-            'common_code' => $common_code,
-            'name' => $name,
-            'role' => $role
+            'common_code' => $common_code
         ]);
+    }
+
+    public function create()
+    {
+        return view('commoncode/v_create_common_code');
+    }
+
+    public function saveCreate(request $request)
+    {
+        // Upload Attachment
+        $remark_2 = $request->file('remark_2');
+        $remark_2_name = '';
+        if ($remark_2 != null) {
+            $remark_2_name = url('public/assets/icon/'.date("Y_m_d") . "_commoncode_" . $request->code . "_" . rand() . "_photo." . $remark_2->getClientOriginalExtension());
+            $destinationPath = public_path('assets/icon');
+            $remark_2->move($destinationPath, $remark_2_name);
+        }
+
+        $commoncode = DB::table('tb_common_code')->insert([
+            'hcode' => $request->hcode,
+            'code' => $request->code,
+            'name' => $request->name,
+            'remark_1' => $request->remark_1,
+            'remark_2' => $remark_2_name
+        ]);
+        if ($commoncode) {
+            return redirect('commoncode');
+        } else {
+            return back();
+        }
+    }
+
+    public function update($hcode, $code)
+    {
+        $data = DB::table('tb_common_code')
+        ->where([['hcode', '=', $hcode], ['code', '=', $code]])
+        ->first();
+
+        return view('commoncode/v_update_common_code', ['data' => $data]);
+    }
+
+    public function saveUpdate(request $request)
+    {
+        $query = DB::table('tb_common_code')
+            ->where('hcode', '=', $request->hcode)
+            ->update([
+                'hcode' => $request->hcode,
+                'code' => $request->code,
+                'name' => $request->name,
+                'remark_1' => $request->remark_1,
+                'remark_2' => $request->remark_2,
+            ]);
+
+        if ($query) {
+            return redirect('commoncode');
+        } else {
+            return back();
+        }
+    }
+
+    public function delete($hcode,$code)
+    {
+        $query = DB::table("tb_common_code")
+            ->where('hcode', '=', $hcode)
+            ->where('code', '=', $code)
+            ->first();
+
+            // echo $query->remark_2."<br>";
+            // echo File::delete($query->remark_2);
+            $exists = Storage::delete($query->remark_2);
+            echo $exists."<br>";
+
+        // Menghapus Foto
+        if(file_exists($query->remark_2)){
+
+            unlink($query->remark_2);
+    
+            $response["value"] = 1;
+    
+            $response["message"] = "Photo Berhasil Dihapus";
+    
+        } else {
+    
+            $response["value"] = 2;
+    
+            $response["message"] = "Photo Tidak Ditemukan";
+    
+        }
+
+        return response($response);  
+
+        // if ($query) {
+        //     return redirect('commoncode');
+        // } else {
+        //     return back();
+        // }
     }
 
 
     // API
-
     // Get Video Belajar List
     public function getTypeVideoList()
     {
@@ -104,51 +197,5 @@ class CommonCodeController extends Controller
 
 
 
-    public function create(request $request)
-    {
-        $commoncode = DB::table('tb_common_code')->insert([
-            'hcode' => $request->hcode,
-            'code' => $request->code,
-            'name' => $request->name,
-            'remark_1' => $request->remark_1,
-            'remark_2' => $request->remark_2
-        ]);
-        if ($commoncode) {
-            return "Data Berhasil disimpan";
-        } else {
-            return "Data Gagal disimpan";
-        }
-    }
-
-    public function update(request $request, $id)
-    {
-        $query = DB::table('tb_common_code')
-            ->where('hcode', '=', $request->hcode)
-            ->update([
-                'hcode' => $request->hcode,
-                'code' => $request->code,
-                'name' => $request->name,
-                'remark_1' => $request->remark_1,
-                'remark_2' => $request->remark_2,
-            ]);
-
-        if ($query) {
-            return "Data berhasil di update";
-        } else {
-            return "Data gagal di update";
-        }
-    }
-
-    public function delete($hcode)
-    {
-        $query = DB::table("tb_common_code")
-            ->where('hcode', '=', $hcode)
-            ->delete();
-
-        if ($query) {
-            return "Data berhasil dihapus";
-        } else {
-            return "Data gagal dihapus";
-        }
-    }
+    
 }
