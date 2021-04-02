@@ -44,7 +44,7 @@
                               <td align="center">{{ $c->code }}</td>
                               <td align="center">{{ $c->name }}</td>
                               <td align="center">{{ $c->remark_1 }}</td>
-                              <td align="center">{{ $c->remark_2 }}</td>
+                              <td align="center" width="50%">{{ $c->remark_2 }}</td>
                               <td align="center">
                                  <a href="{{ route('commoncode.update', ['hcode'=> ($c->hcode), 'code'=> ($c->code)]) }}" type="button" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></a>
                                  <a href="{{ route('commoncode.delete', ['hcode'=> ($c->hcode), 'code'=> ($c->code)]) }}" type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>

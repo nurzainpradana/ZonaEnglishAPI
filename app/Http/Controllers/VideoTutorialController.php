@@ -25,22 +25,21 @@ class VideoTutorialController extends Controller
 
     public function saveCreate(request $request)
     {
-        // Upload Attachment
-        $remark_2 = $request->file('remark_2');
-        $remark_2_name = '';
-        if ($remark_2 != null) {
-            $remark_2_name = 'assets/icon/'.date("Y_m_d") . "_video_tutorial_" . $request->code . "_" . rand() . "_photo." . $remark_2->getClientOriginalExtension();
-            $destinationPath = public_path('assets/icon');
-            $remark_2->move($destinationPath, $remark_2_name);
-        }
+        $head_code = $request->type.$request->level;
 
-        $query = DB::table('tb_video_tutorial')->insert([
-            'hcode' => $request->hcode,
-            'code' => $request->code,
-            'name' => $request->name,
-            'remark_1' => $request->remark_1,
-            'remark_2' => $remark_2_name
-        ]);
+
+        $lastId = DB::table('tb_video_tutorial')->where('code','like',$head_code.'%')->select(DB::raw('max(code) as code'))->first();
+
+            $query = DB::table('tb_video_tutorial')->insert([
+                'code' =>++$lastId->code,
+                'type' => $request->type,
+                'level' => $request->level,
+                'title' => $request->title,
+                'desc' => $request->description,
+                'url_youtube' => $request->url_youtube,
+                'url_zoom' => $request->url_zoom
+            ]);
+    
         if ($query) {
             return redirect('videotutorial');
         } else {
@@ -48,10 +47,10 @@ class VideoTutorialController extends Controller
         }
     }
 
-    public function update($hcode, $code)
+    public function update($code)
     {
         $data = DB::table('tb_video_tutorial')
-        ->where([['hcode', '=', $hcode], ['code', '=', $code]])
+        ->where('code','=',$code)
         ->first();
 
         return view('videotutorial/v_update_video_tutorial', ['data' => $data]);
@@ -60,13 +59,14 @@ class VideoTutorialController extends Controller
     public function saveUpdate(request $request)
     {
         $query = DB::table('tb_video_tutorial')
-            ->where('hcode', '=', $request->hcode)
+            ->where('code', '=', $request->code)
             ->update([
-                'hcode' => $request->hcode,
-                'code' => $request->code,
-                'name' => $request->name,
-                'remark_1' => $request->remark_1,
-                'remark_2' => $request->remark_2,
+                'type' => $request->type,
+                'level' => $request->level,
+                'title' => $request->title,
+                'desc' => $request->description,
+                'url_youtube' => $request->url_youtube,
+                'url_zoom' => $request->url_zoom
             ]);
 
         if ($query) {
@@ -76,10 +76,9 @@ class VideoTutorialController extends Controller
         }
     }
 
-    public function delete($hcode,$code)
+    public function delete($code)
     {
         $query = DB::table("tb_video_tutorial")
-            ->where('hcode', '=', $hcode)
             ->where('code', '=', $code)
             ->delete();
 
@@ -205,5 +204,53 @@ class VideoTutorialController extends Controller
             'code' => 404,
             'data' => null
         ]);
+    }
+
+    // Get Type List
+    public function getTypeList()
+    {
+        $typeList = DB::table('tb_common_code')
+        ->where('hcode', '=', 'TY')
+        ->where('code', '!=', '*')
+        ->get();
+
+        if (isset($_GET['selectedCode'])) {
+            $data = "<option value=''>- Select Type -</option>";
+            foreach ($typeList as $t) {
+                $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
+                $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . "</option>";
+            }
+            echo $data;
+        } else {
+            $data = "<option value=''>- Select Type -</option>";
+            foreach ($typeList as $t) {
+                $data .= "<option value='" . $t->code . "' >" . $t->name . "</option>";
+            }
+            echo $data;
+        }
+    }
+
+    // Get Level List
+    public function getLevelList()
+    {
+        $levelList = DB::table('tb_common_code')
+        ->where('hcode', '=', 'LV')
+        ->where('code', '!=', '*')
+        ->get();
+
+        if (isset($_GET['selectedCode'])) {
+            $data = "<option value=''>- Select Level -</option>";
+            foreach ($levelList as $t) {
+                $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
+                $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . $t->remark_1 ."</option>";
+            }
+            echo $data;
+        } else {
+            $data = "<option value=''>- Select Level -</option>";
+            foreach ($levelList as $t) {
+                $data .= "<option value='" . $t->code . "' >" . $t->name . $t->remark_1 ."</option>";
+            }
+            echo $data;
+        }
     }
 }

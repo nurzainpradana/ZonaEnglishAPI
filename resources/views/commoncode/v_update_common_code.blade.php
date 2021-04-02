@@ -8,7 +8,7 @@
          <i class="fa fa-code"></i>
       </div>
       <div class="header-title">
-         <h1>Update Common Code</h1><br>
+         <h1>Update Common Code</h1>
       </div>
    </section>
    <!-- Main content -->
@@ -38,7 +38,7 @@
                      </div>
                      <div class="form-group">
                         <label>Remark 2</label>
-                        <input name="remark_2" value="{{ url('public/'.$data->remark_2) }}" type="text" class="form-control" placeholder="Enter Remark 2">
+                        <input name="remark_2" value="{{ $data->remark_2 }}" type="text" class="form-control" placeholder="Enter Remark 2">
                      </div>
                      <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Photo</label>

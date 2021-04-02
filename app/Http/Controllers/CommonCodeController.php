@@ -29,21 +29,30 @@ class CommonCodeController extends Controller
     public function saveCreate(request $request)
     {
         // Upload Attachment
-        $remark_2 = $request->file('remark_2');
-        $remark_2_name = '';
-        if ($remark_2 != null) {
-            $remark_2_name = url('public/assets/icon/'.date("Y_m_d") . "_commoncode_" . $request->code . "_" . rand() . "_photo." . $remark_2->getClientOriginalExtension());
-            $destinationPath = public_path('assets/icon');
-            $remark_2->move($destinationPath, $remark_2_name);
+        if ($request->file('remark_2') != null){
+            $remark_2 = $request->file('remark_2');
+            $remark_2_name = '';
+            if ($remark_2 != null) {
+                $filename = 'assets/icon/'.date("Y_m_d") . "_commoncode_" . $request->code . "_" . rand() . "_photo." . $remark_2->getClientOriginalExtension();
+                $remark_2_name = url($filename);
+                $destinationPath = public_path('assets/icon');
+                $remark_2->move($destinationPath, $remark_2_name);
+            }
+            $commoncode = DB::table('tb_common_code')->insert([
+                'hcode' => $request->hcode,
+                'code' => $request->code,
+                'name' => $request->name,
+                'remark_1' => $request->remark_1,
+                'remark_2' => $filename
+            ]);
+        } else {
+            $commoncode = DB::table('tb_common_code')->insert([
+                'hcode' => $request->hcode,
+                'code' => $request->code,
+                'name' => $request->name,
+                'remark_1' => $request->remark_1
+            ]);
         }
-
-        $commoncode = DB::table('tb_common_code')->insert([
-            'hcode' => $request->hcode,
-            'code' => $request->code,
-            'name' => $request->name,
-            'remark_1' => $request->remark_1,
-            'remark_2' => $remark_2_name
-        ]);
         if ($commoncode) {
             return redirect('commoncode');
         } else {
@@ -64,9 +73,8 @@ class CommonCodeController extends Controller
     {
         $query = DB::table('tb_common_code')
             ->where('hcode', '=', $request->hcode)
+            ->where('code', '=', $request->code)
             ->update([
-                'hcode' => $request->hcode,
-                'code' => $request->code,
                 'name' => $request->name,
                 'remark_1' => $request->remark_1,
                 'remark_2' => $request->remark_2,
@@ -84,37 +92,37 @@ class CommonCodeController extends Controller
         $query = DB::table("tb_common_code")
             ->where('hcode', '=', $hcode)
             ->where('code', '=', $code)
-            ->first();
+            ->delete();
 
             // echo $query->remark_2."<br>";
             // echo File::delete($query->remark_2);
-            $exists = Storage::delete($query->remark_2);
-            echo $exists."<br>";
+            // $exists = Storage::delete($query->remark_2);
+            // echo $exists."<br>";
 
         // Menghapus Foto
-        if(file_exists($query->remark_2)){
+        // if(file_exists($query->remark_2)){
 
-            unlink($query->remark_2);
+        //     unlink($query->remark_2);
     
-            $response["value"] = 1;
+        //     $response["value"] = 1;
     
-            $response["message"] = "Photo Berhasil Dihapus";
+        //     $response["message"] = "Photo Berhasil Dihapus";
     
-        } else {
-    
-            $response["value"] = 2;
-    
-            $response["message"] = "Photo Tidak Ditemukan";
-    
-        }
-
-        return response($response);  
-
-        // if ($query) {
-        //     return redirect('commoncode');
         // } else {
-        //     return back();
+    
+        //     $response["value"] = 2;
+    
+        //     $response["message"] = "Photo Tidak Ditemukan";
+    
         // }
+
+        // return response($response);  
+
+        if ($query) {
+            return redirect('commoncode');
+        } else {
+            return back();
+        }
     }
 
 

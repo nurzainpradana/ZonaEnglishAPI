@@ -33,3 +33,6 @@ Route::get('/updatevideotutorial/{code}', 'VideoTutorialController@update')->nam
 Route::post('/saveupdatevideotutorial','VideoTutorialController@saveUpdate')->name('videotutorial.saveupdate');
 Route::get('/deletevideotutorial/{code}','VideoTutorialController@delete')->name('videotutorial.delete');
 Route::post('/savevideotutorial','VideoTutorialController@saveCreate')->name('videotutorial.save');
+
+Route::get('/gettypelist','VideoTutorialController@getTypeList')->name('videotutorial.gettypelist');
+Route::get('/getlevellist','VideoTutorialController@getLevelList')->name('videotutorial.getlevellist');

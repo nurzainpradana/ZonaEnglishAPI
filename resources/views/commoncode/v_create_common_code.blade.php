@@ -8,7 +8,7 @@
          <i class="fa fa-code"></i>
       </div>
       <div class="header-title">
-         <h1>Create Common Code</h1><br>
+         <h1>Create Common Code</h1>
       </div>
    </section>
    <!-- Main content -->
