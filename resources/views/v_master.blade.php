@@ -126,6 +126,12 @@
                      </span>
                   </a>
                </li>
+               <li>
+                  <a href="{{ route('infopromo') }}"><i class="fa fa-book"></i><span>Info Promo</span>
+                     <span class="pull-right-container">
+                     </span>
+                  </a>
+               </li>
             </ul>
          </div>
          <!-- /.sidebar -->

@@ -7,6 +7,86 @@ use Illuminate\Support\Facades\DB;
 
 class InfoPromoController extends Controller
 {
+    // WEB ADMIN
+    public function index()
+    {
+        $query = DB::table('tb_info_promo')
+            ->orderBy('code', 'ASC')
+            ->get();
+        return view('infopromo/v_info_promo', [
+            'info_promo' => $query
+        ]);
+    }
+
+    public function create()
+    {
+        return view('infopromo/v_create_info_promo');
+    }
+
+    public function saveCreate(request $request)
+    {
+
+        $lastId = DB::table('tb_info_promo')->where('code','like','PR%')->select(DB::raw('max(code) as code'))->first();
+
+            $query = DB::table('tb_info_promo')->insert([
+                'code' =>++$lastId->code,
+                'type' => $request->type,
+                'level' => $request->level,
+                'title' => $request->title,
+                'desc' => $request->description,
+                'url_youtube' => $request->url_youtube,
+                'url_zoom' => $request->url_zoom
+            ]);
+    
+        if ($query) {
+            return redirect('videotutorial');
+        } else {
+            return back();
+        }
+    }
+
+    public function update($code)
+    {
+        $data = DB::table('tb_video_tutorial')
+        ->where('code','=',$code)
+        ->first();
+
+        return view('videotutorial/v_update_video_tutorial', ['data' => $data]);
+    }
+
+    public function saveUpdate(request $request)
+    {
+        $query = DB::table('tb_video_tutorial')
+            ->where('code', '=', $request->code)
+            ->update([
+                'type' => $request->type,
+                'level' => $request->level,
+                'title' => $request->title,
+                'desc' => $request->description,
+                'url_youtube' => $request->url_youtube,
+                'url_zoom' => $request->url_zoom
+            ]);
+
+        if ($query) {
+            return redirect('videotutorial');
+        } else {
+            return back();
+        }
+    }
+
+    public function delete($code)
+    {
+        $query = DB::table("tb_video_tutorial")
+            ->where('code', '=', $code)
+            ->delete();
+
+        if ($query) {
+            return redirect('videotutorial');
+        } else {
+            return back();
+        }
+    }
+
     // Get Video List By Type
     public function getInfoPromoList()
     {

@@ -45,8 +45,12 @@
                         <input name="description" value="{{ $data->desc }}" type="text" class="form-control" placeholder="Enter Remark 2">
                      </div>
                      <div class="form-group">
-                        <label>Remark</label>
-                        <input name="remark_1" value="{{ $data->remark_1 }}" type="text" class="form-control" placeholder="Enter Remark 2">
+                        <label>URL Zoom</label>
+                        <input name="url_zoom" value="{{ $data->url_zoom }}" type="text" class="form-control" placeholder="Enter URL Zoom">
+                     </div>
+                     <div class="form-group">
+                        <label>URL Youtube</label>
+                        <input name="url_youtube" value="{{ $data->url_youtube }}" type="text" class="form-control" placeholder="Enter URL Youtube">
                      </div>
                      {{-- <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Photo</label>

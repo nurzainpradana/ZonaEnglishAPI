@@ -34,5 +34,13 @@ Route::post('/saveupdatevideotutorial','VideoTutorialController@saveUpdate')->na
 Route::get('/deletevideotutorial/{code}','VideoTutorialController@delete')->name('videotutorial.delete');
 Route::post('/savevideotutorial','VideoTutorialController@saveCreate')->name('videotutorial.save');
 
+// DATA MASTER INFO PROMO
+Route::get('/infopromo','InfoPromoController@index')->name('infopromo');
+Route::get('/createinfopromo','InfoPromoController@create')->name('infopromo.create');
+Route::get('/updateinfopromo/{code}', 'InfoPromoController@update')->name('infopromo.update');
+Route::post('/saveupdateinfopromo','InfoPromoController@saveUpdate')->name('infopromo.saveupdate');
+Route::get('/deleteinfopromo/{code}','InfoPromoController@delete')->name('infopromo.delete');
+Route::post('/saveinfopromo','InfoPromoController@saveCreate')->name('infopromo.save');
+
 Route::get('/gettypelist','VideoTutorialController@getTypeList')->name('videotutorial.gettypelist');
 Route::get('/getlevellist','VideoTutorialController@getLevelList')->name('videotutorial.getlevellist');
