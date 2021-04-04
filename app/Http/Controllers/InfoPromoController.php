@@ -25,21 +25,37 @@ class InfoPromoController extends Controller
 
     public function saveCreate(request $request)
     {
+        $code = DB::table('tb_info_promo')->where('code','like','PRO%')->select(DB::raw('max(code) as code'))->first();
 
-        $lastId = DB::table('tb_info_promo')->where('code','like','PR%')->select(DB::raw('max(code) as code'))->first();
-
-            $query = DB::table('tb_info_promo')->insert([
-                'code' =>++$lastId->code,
-                'type' => $request->type,
-                'level' => $request->level,
+        // Upload Attachment
+        if ($request->file('picture') != null){
+            $picture = $request->file('picture');
+            $picture_name = '';
+            if ($picture != null) {
+                $filename = 'assets/promo/'.date("Y_m_d") . "_promo_" . $request->code . "_" . rand() . "_photo." . $picture->getClientOriginalExtension();
+                $picture_name = url($filename);
+                $destinationPath = public_path('assets/promo');
+                $picture->move($destinationPath, $picture_name);
+            }
+            $commoncode = DB::table('tb_info_promo')->insert([
+                'code' => ++$code->code,
                 'title' => $request->title,
-                'desc' => $request->description,
-                'url_youtube' => $request->url_youtube,
-                'url_zoom' => $request->url_zoom
+                'subtitle' => $request->subtitle,
+                'sk' => $request->sk,
+                'expired_date' => $request->expired_date,
+                'picture' => $filename
             ]);
-    
-        if ($query) {
-            return redirect('videotutorial');
+        } else {
+            $commoncode = DB::table('tb_info_promo')->insert([
+                'code' => ++$code->code,
+                'title' => $request->title,
+                'subtitle' => $request->subtitle,
+                'expired_date' => $request->expired_date,
+                'sk' => $request->sk
+            ]);
+        }
+        if ($commoncode) {
+            return redirect('infopromo  ');
         } else {
             return back();
         }
@@ -47,11 +63,11 @@ class InfoPromoController extends Controller
 
     public function update($code)
     {
-        $data = DB::table('tb_video_tutorial')
+        $data = DB::table('tb_info_promo')
         ->where('code','=',$code)
         ->first();
 
-        return view('videotutorial/v_update_video_tutorial', ['data' => $data]);
+        return view('infopromo/v_update_info_promo', ['data' => $data]);
     }
 
     public function saveUpdate(request $request)
