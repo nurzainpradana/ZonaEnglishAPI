@@ -22,24 +22,28 @@
                      @csrf
                      <div class="form-group">
                         <label>Code</label>
-                        <input name="hcode" value="{{ $data->code }}" type="text" class="form-control" placeholder="Enter Code" required readonly>
+                        <input name="code" value="{{ $data->code }}" type="text" class="form-control" placeholder="Enter Code" required readonly>
                      </div>
                      <div class="form-group">
                         <label>Title</label>
-                        <input name="code" value="{{ $data->title }}" type="text" class="form-control" placeholder="Enter Title" required readonly>
+                        <input name="title" value="{{ $data->title }}" type="text" class="form-control" placeholder="Enter Title" required>
+                     </div>
+                     <div class="form-group">
+                        <label>Expired Date</label>
+                        <input name="expired_date" value="{{ $data->expired_date }}" type="date" class="form-control" placeholder="Enter Date">
                      </div>
                      <div class="form-group">
                         <label>Subtitle</label>
                         <input name="subtitle" value="{{ $data->subtitle }}" type="text" class="form-control" placeholder="Enter Subtitle">
                      </div>
-                     <div class="form-group">
+                     <div class="form-group">   
                         <label>Syarat & Ketentuan</label>
                         <textarea name="sk" value="{{ $data->sk }}" type="text" class="form-control" placeholder="Enter Syarat Ketentuan">{{ $data->sk }}</textarea>
                      </div>
                      <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Picture</label>
                         <div class="col-sm-9 pl-0">
-                           <img height="90px" src="{{ url('public/'.$data->picture) }}" alt="">
+                           <img height="90px" src="{{ url($data->picture) }}" alt="">
                            <input id="picture_old" name="picture_old" type="text" class="form-control hidden" value="{{ $data->picture }}">
                            <input name="picture" type="file" class="form-control">
                         </div>

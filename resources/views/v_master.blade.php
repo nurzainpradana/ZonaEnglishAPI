@@ -132,6 +132,12 @@
                      </span>
                   </a>
                </li>
+               <li>
+                  <a href="{{ route('user') }}"><i class="fa fa-user"></i><span>Users</span>
+                     <span class="pull-right-container">
+                     </span>
+                  </a>
+               </li>
             </ul>
          </div>
          <!-- /.sidebar -->

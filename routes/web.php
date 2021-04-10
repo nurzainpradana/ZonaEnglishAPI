@@ -42,5 +42,13 @@ Route::post('/saveupdateinfopromo','InfoPromoController@saveUpdate')->name('info
 Route::get('/deleteinfopromo/{code}','InfoPromoController@delete')->name('infopromo.delete');
 Route::post('/saveinfopromo','InfoPromoController@saveCreate')->name('infopromo.save');
 
+// DATA MASTER USERS
+Route::get('/users','UsersController@index')->name('users');
+Route::get('/createusers','UsersController@create')->name('users.create');
+Route::get('/updateusers/{code}', 'UsersController@update')->name('users.update');
+Route::post('/saveupdateusers','UsersController@saveUpdate')->name('users.saveupdate');
+Route::get('/deleteusers/{code}','UsersController@delete')->name('users.delete');
+Route::post('/saveusers','UsersController@saveCreate')->name('users.save');
+
 Route::get('/gettypelist','VideoTutorialController@getTypeList')->name('videotutorial.gettypelist');
 Route::get('/getlevellist','VideoTutorialController@getLevelList')->name('videotutorial.getlevellist');

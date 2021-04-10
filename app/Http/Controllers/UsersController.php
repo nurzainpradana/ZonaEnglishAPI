@@ -5,57 +5,60 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class InfoPromoController extends Controller
+class UsersController extends Controller
 {
     // WEB ADMIN
     public function index()
     {
-        $query = DB::table('tb_info_promo')
-            ->orderBy('code', 'ASC')
+        $query = DB::table('users')
+            ->orderBy('id', 'ASC')
             ->get();
-        return view('infopromo/v_info_promo', [
-            'info_promo' => $query
+
+        return view('users/v_users', [
+            'users' => $query
         ]);
     }
 
     public function create()
     {
-        return view('infopromo/v_create_info_promo');
+        return view('users/v_create_users');
     }
 
     public function saveCreate(request $request)
     {
-        $code = DB::table('tb_info_promo')->where('code','like','PRO%')->select(DB::raw('max(code) as code'))->first();
+        $code = DB::table('users')->select(DB::raw('max(id) as code'))->first();
 
         // Upload Attachment
         if ($request->file('picture') != null){
             $picture = $request->file('picture');
             $picture_name = '';
             if ($picture != null) {
-                $filename = 'public/assets/promo/'.date("Y_m_d") . "_promo_" . $request->code . "_" . rand() . "_photo." . $picture->getClientOriginalExtension();
+                $filename = 'public/assets/users/'.date("Y_m_d") . "_users_" . $request->code . "_" . rand() . "_photo." . $picture->getClientOriginalExtension();
                 $picture_name = url($filename);
-                $destinationPath = public_path('assets/promo');
+                $destinationPath = public_path('assets/users');
                 $picture->move($destinationPath, $picture_name);
             }
-            $commoncode = DB::table('tb_info_promo')->insert([
-                'code' => ++$code->code,
-                'title' => $request->title,
-                'subtitle' => $request->subtitle,
-                'sk' => $request->sk,
-                'expired_date' => $request->expired_date,
-                'picture' => $filename
+            $users = DB::table('users')->insert([
+                'id' => ++$code->code,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => md5($request->password),
+                'no_phone' => $request->no_photo,
+                'nik' => $request->nik,
+                'photo' => $picture_name
             ]);
         } else {
-            $commoncode = DB::table('tb_info_promo')->insert([
-                'code' => ++$code->code,
-                'title' => $request->title,
-                'subtitle' => $request->subtitle,
-                'expired_date' => $request->expired_date,
-                'sk' => $request->sk
+            $users = DB::table('users')->insert([
+                'id' => ++$code->code,
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => md5($request->password),
+                'no_phone' => $request->no_photo,
+                'nik' => $request->nik
             ]);
         }
-        if ($commoncode) {
-            return redirect('infopromo');
+        if ($users) {
+            return redirect('users');
         } else {
             return back();
         }
@@ -63,11 +66,11 @@ class InfoPromoController extends Controller
 
     public function update($code)
     {
-        $data = DB::table('tb_info_promo')
-        ->where('code','=',$code)
+        $data = DB::table('users')
+        ->where('id','=',$code)
         ->first();
 
-        return view('infopromo/v_update_info_promo', ['data' => $data]);
+        return view('users/v_update_users', ['data' => $data]);
     }
 
     public function saveUpdate(request $request)
@@ -76,45 +79,48 @@ class InfoPromoController extends Controller
             $picture = $request->file('picture');
             $picture_name = '';
             if ($picture != null) {
-                $filename = 'public/assets/promo/'.date("Y_m_d") . "_promo_" . $request->code . "_" . rand() . "_photo." . $picture->getClientOriginalExtension();
+                $filename = 'public/assets/users/'.date("Y_m_d") . "_users_" . $request->code . "_" . rand() . "_photo." . $picture->getClientOriginalExtension();
                 $picture_name = $filename;
-                $destinationPath = public_path('assets/promo');
+                $destinationPath = public_path('assets/users');
                 $picture->move($destinationPath, $picture_name);
             }
-            $query = DB::table('tb_info_promo')
-            ->where('code', '=', $request->code)
+            $query = DB::table('users')
+            ->where('id', '=', $request->id)
             ->update([
-                'title' => $request->title,
-                'subtitle' => $request->subtitle,
-                'expired_date' => $request->expired_date,
-                'picture' => $picture_name,
-                'sk' => $request->sk
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => md5($request->password),
+                'no_phone' => $request->no_photo,
+                'nik' => $request->nik,
+                'photo' => $picture_name
             ]);
         } else if (isset($request->picture_old)){
-            $query = DB::table('tb_info_promo')
-            ->where('code', '=', $request->code)
+            $query = DB::table('users')
+            ->where('id', '=', $request->code)
             ->update([
-                'title' => $request->title,
-                'subtitle' => $request->subtitle,
-                'expired_date' => $request->expired_date,
-                'sk' => $request->sk,
-                'picture' => $request->picture_old
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => md5($request->password),
+                'no_phone' => $request->no_photo,
+                'nik' => $request->nik,
+                'photo' => $request->picture_old
             ]);
         } else {
-            $query = DB::table('tb_info_promo')
-            ->where('code', '=', $request->code)
+            $query = DB::table('users')
+            ->where('id', '=', $request->code)
             ->update([
-                'title' => $request->title,
-                'subtitle' => $request->subtitle,
-                'expired_date' => $request->expired_date,
-                'sk' => $request->sk
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => md5($request->password),
+                'no_phone' => $request->no_photo,
+                'nik' => $request->nik
             ]);
         }
 
         // dd($query);
 
         if ($query) {
-            return redirect('infopromo');
+            return redirect('users');
         } else {
             return back();
         }
@@ -122,12 +128,12 @@ class InfoPromoController extends Controller
 
     public function delete($code)
     {
-        $query = DB::table("tb_info_promo")
-            ->where('code', '=', $code)     
+        $query = DB::table('users')
+            ->where('id', '=', $code)     
             ->delete();
 
         if ($query) {
-            return redirect('infopromo');
+            return redirect('users');
         } else {
             return back();
         }
