@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -15,7 +16,7 @@ class UsersController extends Controller
             ->get();
 
         return view('users/v_users', [
-            'users' => $query
+            'data' => $query
         ]);
     }
 
@@ -29,8 +30,8 @@ class UsersController extends Controller
         $code = DB::table('users')->select(DB::raw('max(id) as code'))->first();
 
         // Upload Attachment
-        if ($request->file('picture') != null){
-            $picture = $request->file('picture');
+        if ($request->file('photo') != null){
+            $picture = $request->file('photo');
             $picture_name = '';
             if ($picture != null) {
                 $filename = 'public/assets/users/'.date("Y_m_d") . "_users_" . $request->code . "_" . rand() . "_photo." . $picture->getClientOriginalExtension();
@@ -42,8 +43,8 @@ class UsersController extends Controller
                 'id' => ++$code->code,
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => md5($request->password),
-                'no_phone' => $request->no_photo,
+                'password' => Hash::make($request->password),
+                'no_phone' => $request->no_phone,
                 'nik' => $request->nik,
                 'photo' => $picture_name
             ]);
@@ -53,7 +54,7 @@ class UsersController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => md5($request->password),
-                'no_phone' => $request->no_photo,
+                'no_phone' => $request->no_phone,
                 'nik' => $request->nik
             ]);
         }
@@ -75,8 +76,8 @@ class UsersController extends Controller
 
     public function saveUpdate(request $request)
     {
-        if ($request->hasFile('picture') != null){
-            $picture = $request->file('picture');
+        if ($request->hasFile('photo') != null){
+            $picture = $request->file('photo');
             $picture_name = '';
             if ($picture != null) {
                 $filename = 'public/assets/users/'.date("Y_m_d") . "_users_" . $request->code . "_" . rand() . "_photo." . $picture->getClientOriginalExtension();
@@ -84,37 +85,73 @@ class UsersController extends Controller
                 $destinationPath = public_path('assets/users');
                 $picture->move($destinationPath, $picture_name);
             }
-            $query = DB::table('users')
-            ->where('id', '=', $request->id)
-            ->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => md5($request->password),
-                'no_phone' => $request->no_photo,
-                'nik' => $request->nik,
-                'photo' => $picture_name
-            ]);
+            if (isset($request->password_new)) {
+                $query = DB::table('users')
+                ->where('id', '=', $request->id)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password_new),
+                    'no_phone' => $request->no_photo,
+                    'nik' => $request->nik,
+                    'photo' => $picture_name
+                ]);
+            } else {
+                $query = DB::table('users')
+                ->where('id', '=', $request->id)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'no_phone' => $request->no_photo,
+                    'nik' => $request->nik,
+                    'photo' => $picture_name
+                ]);
+            }
+            
         } else if (isset($request->picture_old)){
-            $query = DB::table('users')
-            ->where('id', '=', $request->code)
-            ->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => md5($request->password),
-                'no_phone' => $request->no_photo,
-                'nik' => $request->nik,
-                'photo' => $request->picture_old
-            ]);
+            if (isset($request->password_new)) {
+                $query = DB::table('users')
+                ->where('id', '=', $request->code)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password_new),
+                    'no_phone' => $request->no_photo,
+                    'nik' => $request->nik,
+                    'photo' => $request->picture_old
+                ]);
+            } else {
+                $query = DB::table('users')
+                ->where('id', '=', $request->code)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'no_phone' => $request->no_photo,
+                    'nik' => $request->nik,
+                    'photo' => $request->picture_old
+                ]);
+            }
         } else {
-            $query = DB::table('users')
-            ->where('id', '=', $request->code)
-            ->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => md5($request->password),
-                'no_phone' => $request->no_photo,
-                'nik' => $request->nik
-            ]);
+            if (isset($request->password_new)) {
+                $query = DB::table('users')
+                ->where('id', '=', $request->code)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'no_phone' => $request->no_photo,
+                    'password' => Hash::make($request->password_new),
+                    'nik' => $request->nik
+                ]);
+            } else {
+                $query = DB::table('users')
+                ->where('id', '=', $request->code)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'no_phone' => $request->no_photo,
+                    'nik' => $request->nik
+                ]);
+            }
         }
 
         // dd($query);

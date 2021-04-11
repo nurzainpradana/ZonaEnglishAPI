@@ -9,7 +9,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <title>ZonaEnglish</title>
    <!-- Favicon and touch icons -->
-   <link rel="shortcut icon" href="assets/dist/img/cj_logo.png" type="image/x-icon">
+   <link rel="shortcut icon" href="assets/dist/img/zonaenglish_logo.png" type="image/x-icon">
    <!-- Start Global Mandatory Style
          =====================================================================-->
    <!-- jquery-ui css -->
@@ -133,7 +133,13 @@
                   </a>
                </li>
                <li>
-                  <a href="{{ route('user') }}"><i class="fa fa-user"></i><span>Users</span>
+                  <a href="{{ route('users') }}"><i class="fa fa-user"></i><span>Users</span>
+                     <span class="pull-right-container">
+                     </span>
+                  </a>
+               </li>
+               <li>
+                  <a href="{{ route('tutor') }}"><i class="fa fa-user"></i><span>Tutor</span>
                      <span class="pull-right-container">
                      </span>
                   </a>
