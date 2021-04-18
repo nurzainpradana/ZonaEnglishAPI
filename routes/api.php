@@ -28,6 +28,8 @@ Route::delete('/commoncode/{hcode}','CommonCodeController@delete');
 Route::get('gettypevideolist','CommonCodeController@getTypeVideoList');
 // Get Level List
 Route::get('getlevellist','CommonCodeController@getLevelList');
+// Get Title List
+Route::get('gettitlelist','CommonCodeController@getTitleList');
 
 // TABLE VIDEO TUTORIAL
 // Get Video Tutorial List By Type
@@ -36,7 +38,6 @@ Route::get('getvideolistbytype','VideoTutorialController@getVideoListByType');
 Route::get('getvideolistbytypelevel','VideoTutorialController@getVideoListByTypeLevel');
 // Get Video Detail
 Route::get('getvideodetail','VideoTutorialController@getVideoDetail');
-
 // TABLE INFO PROMO
 // Get Info Promo List
 Route::get('getinfopromolist','InfoPromoController@getInfoPromoList');

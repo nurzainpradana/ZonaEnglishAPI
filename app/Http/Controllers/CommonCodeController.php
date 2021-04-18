@@ -202,6 +202,83 @@ class CommonCodeController extends Controller
         ]);
     }
 
+    // Get Video Belajar List
+    public function getTitleList()
+    {
+        if ($_GET != null) {
+            // Verification API Token
+            if (isset($_GET['title']) && $_GET['api_token'] == 'zonaenglish2021!') {
+                $data = DB::table('tb_common_code')
+                    ->where('hcode', '=', 'TTL')
+                    ->where('code', '=', $_GET['type'])
+                    ->where('code', '!=', '*')
+                    ->get();
+
+                if (!$data->isEmpty()) {
+                    return response()->json([
+                        'data' => $data
+                    ]);
+                } else {
+                    return response()->json([
+                        'data' => null
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'data' => null
+                ]);
+            }
+        } else {
+            $data = DB::table('tb_common_code')
+                    ->where('hcode', '=', 'TTL')
+                    ->where('code', '!=', '*')
+                    ->get();
+
+                    return response()->json([
+                        'data' => null
+                    ]);
+        }
+    }
+
+    // Get Video List By Type
+    public function getVideoListByTypeLevel()
+    {
+        if ($_GET != null) {
+            // Verification API Token
+            if (isset($_GET['type']) && isset($_GET['level'])&& $_GET['api_token'] == 'zonaenglish2021!') {
+                $data = DB::table('tb_tutor')
+                    ->where('type', '=', $_GET['type'])
+                    ->where('level', '=', $_GET['level'])
+                    ->get();
+
+                if (!$data->isEmpty()) {
+                    return response()->json([
+                        'message' => 'success',
+                        'code' => 200,
+                        'data' => $data
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'failed',
+                        'code' => 204,
+                        'data' => null
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'failed',
+                    'code' => 401,
+                    'data' => null
+                ]);
+            }
+        }
+        return response()->json([
+            'message' => 'failed',
+            'code' => 404,
+            'data' => null
+        ]);
+    }
+
 
 
 

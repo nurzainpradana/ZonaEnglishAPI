@@ -50,5 +50,13 @@ Route::post('/saveupdateusers','UsersController@saveUpdate')->name('users.saveup
 Route::get('/deleteusers/{code}','UsersController@delete')->name('users.delete');
 Route::post('/saveusers','UsersController@saveCreate')->name('users.save');
 
+// DATA MASTER TUTOR
+Route::get('/tutor','TutorController@index')->name('tutor');
+Route::get('/createtutor','TutorController@create')->name('tutor.create');
+Route::get('/updatetutor/{code}', 'TutorController@update')->name('tutor.update');
+Route::post('/saveupdatetutor','TutorController@saveUpdate')->name('tutor.saveupdate');
+Route::get('/deletetutor/{code}','TutorController@delete')->name('tutor.delete');
+Route::post('/savetutor','TutorController@saveCreate')->name('tutor.save');
+
 Route::get('/gettypelist','VideoTutorialController@getTypeList')->name('videotutorial.gettypelist');
 Route::get('/getlevellist','VideoTutorialController@getLevelList')->name('videotutorial.getlevellist');
