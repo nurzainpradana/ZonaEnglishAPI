@@ -253,4 +253,76 @@ class VideoTutorialController extends Controller
             echo $data;
         }
     }
+
+    // Get Title List
+    public function getTitleList()
+    {
+        $levelList = DB::table('tb_common_code')
+        ->where('hcode', '=', 'TTL')
+        ->where('code', '!=', '*')
+        ->get();
+
+        if (isset($_GET['selectedCode'])) {
+            $data = "<option value=''>- Select Title -</option>";
+            foreach ($levelList as $t) {
+                $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
+                $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . $t->remark_1 ."</option>";
+            }
+            echo $data;
+        } else {
+            $data = "<option value=''>- Select Title -</option>";
+            foreach ($levelList as $t) {
+                $data .= "<option value='" . $t->code . "' >" . $t->name . $t->remark_1 ."</option>";
+            }
+            echo $data;
+        }
+    }
+
+    // Get Country List
+    public function getCountryList()
+    {
+        $levelList = DB::table('tb_common_code')
+        ->where('hcode', '=', 'CTGTT')
+        ->where('code', '!=', '*')
+        ->get();
+
+        if (isset($_GET['selectedCode'])) {
+            $data = "<option value=''>- Select Country -</option>";
+            foreach ($levelList as $t) {
+                $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
+                $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . $t->remark_1 ."</option>";
+            }
+            echo $data;
+        } else {
+            $data = "<option value=''>- Select Country -</option>";
+            foreach ($levelList as $t) {
+                $data .= "<option value='" . $t->code . "' >" . $t->name . $t->remark_1 ."</option>";
+            }
+            echo $data;
+        }
+    }
+
+        // Get   List
+        public function getExperienceList()
+        {
+            $levelList = DB::table('tb_common_code')
+            ->where('hcode', '=', 'EXP')
+            ->where('code', '!=', '*')
+            ->get();
+    
+            if (isset($_GET['selectedCode'])) {
+                $data = "<option value=''>- Select Experience -</option>";
+                foreach ($levelList as $t) {
+                    $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
+                    $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . $t->remark_1 ."</option>";
+                }
+                echo $data;
+            } else {
+                $data = "<option value=''>- Select Experience -</option>";
+                foreach ($levelList as $t) {
+                    $data .= "<option value='" . $t->code . "' >" . $t->name . $t->remark_1 ."</option>";
+                }
+                echo $data;
+            }
+        }
 }

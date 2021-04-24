@@ -60,3 +60,6 @@ Route::post('/savetutor','TutorController@saveCreate')->name('tutor.save');
 
 Route::get('/gettypelist','VideoTutorialController@getTypeList')->name('videotutorial.gettypelist');
 Route::get('/getlevellist','VideoTutorialController@getLevelList')->name('videotutorial.getlevellist');
+Route::get('/gettitlelist','VideoTutorialController@getTitleList')->name('videotutorial.gettitlelist');
+Route::get('/getexperiencelist','VideoTutorialController@getExperienceList')->name('videotutorial.getexperiencelist');
+Route::get('/getcountrylist','VideoTutorialController@getCountryList')->name('videotutorial.getcountrylist');

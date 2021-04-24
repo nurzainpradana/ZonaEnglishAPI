@@ -216,16 +216,20 @@ class CommonCodeController extends Controller
 
                 if (!$data->isEmpty()) {
                     return response()->json([
+                        'message' => 'success',
+                        'code' => 200,
                         'data' => $data
                     ]);
                 } else {
                     return response()->json([
-                        'data' => null
+                        'message' => 'failed',
+                        'code' => 204
                     ]);
                 }
             } else {
                 return response()->json([
-                    'data' => null
+                    'message' => 'failed',
+                    'code' => 401
                 ]);
             }
         } else {
@@ -235,7 +239,9 @@ class CommonCodeController extends Controller
                     ->get();
 
                     return response()->json([
-                        'data' => null
+                        'message' => 'success',
+                        'code' => 200,
+                        'data' => $data
                     ]);
         }
     }
