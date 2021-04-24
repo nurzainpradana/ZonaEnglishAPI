@@ -45,3 +45,6 @@ Route::get('getinfopromolist','InfoPromoController@getInfoPromoList');
 Route::get('getinfopromotoplist','InfoPromoController@getInfoPromoTopList');
 // Get Info Promo Detail
 Route::get('getinfopromodetail','InfoPromoController@getInfoPromoDetail');
+
+// Get Tutor List
+Route::get('gettutorlist','TutorController@getTutorList');

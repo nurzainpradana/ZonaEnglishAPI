@@ -29,15 +29,15 @@ class TutorController extends Controller
         // Get Last Code
         $lastId = DB::table('tb_tutor')->where('code', 'like', 'TTR%')->select(DB::raw('max(code) as code'))->first();
 
-        
+
         $photo = $request->file('photo');
         if ($photo != null) {
-            $filename = 'assets/photo_tutor/'.date("Y_m_d") . "_tutor_" . $request->code . "_" . rand() . "_photo." . $photo->getClientOriginalExtension();
+            $filename = 'assets/tutor/' . date("Y_m_d") . "_tutor_" . $request->code . "_" . rand() . "_photo." . $photo->getClientOriginalExtension();
             $photo_name = url($filename);
-            $destinationPath = public_path('assets/icon');
-            $photo->move($destinationPath, $photo_name);
+            $destinationPath = public_path('assets/tutor');
+            $photo->move($destinationPath, $filename);
         }
-        
+
         $query = DB::table('tb_tutor')->insert([
             'code' => ++$lastId->code,
             'name' => $request->name,
@@ -51,7 +51,7 @@ class TutorController extends Controller
             'interest' => $request->interest,
             'spoken' => $request->spoken,
             'video' => $request->video,
-            'photo' => $photo_name,
+            'photo' => $filename,
             'rating' => 3.0,
         ]);
 
@@ -73,21 +73,60 @@ class TutorController extends Controller
 
     public function saveUpdate(request $request)
     {
-        $query = DB::table('tb_tutor')
-            ->where('code', '=', $request->code)
-            ->update([
-                'type' => $request->type,
-                'level' => $request->level,
-                'title' => $request->title,
-                'desc' => $request->description,
-                'url_youtube' => $request->url_youtube,
-                'url_zoom' => $request->url_zoom
-            ]);
-
-        if ($query) {
-            return redirect('tutor');
+        // Upload Attachment
+        if ($request->file('photo') != null) {
+            $photo = $request->file('photo');
+            if ($photo != null) {
+                $filename = 'assets/tutor/' . date("Y_m_d") . "_tutor_" . $request->code . "_" . rand() . "_photo." . $photo->getClientOriginalExtension();
+                // $remark_2_name = url($filename);
+                $destinationPath = public_path('assets/tutor');
+                $photo->move($destinationPath, $filename);
+            }
+            $query = DB::table('tb_tutor')
+                ->where('code', '=', $request->code)
+                ->update([
+                    'code' => $request->code,
+                    'name' => $request->name,
+                    'title' => $request->title,
+                    'country' => $request->country,
+                    'experience' => $request->experience,
+                    'experience_detail' => $request->experience_detail,
+                    'price' => $request->price,
+                    'discount' => $request->discount,
+                    'education' => $request->education,
+                    'interest' => $request->interest,
+                    'spoken' => $request->spoken,
+                    'video' => $request->video,
+                    'photo' => $filename
+                ]);
+            if ($query) {
+                return redirect('tutor');
+            } else {
+                return back();
+            }
         } else {
-            return back();
+            $query = DB::table('tb_tutor')
+                ->where('code', '=', $request->code)
+                ->update([
+                    'name' => $request->name,
+                    'title' => $request->title,
+                    'country' => $request->country,
+                    'experience' => $request->experience,
+                    'experience_detail' => $request->experience_detail,
+                    'price' => $request->price,
+                    'discount' => $request->discount,
+                    'education' => $request->education,
+                    'interest' => $request->interest,
+                    'spoken' => $request->spoken,
+                    'video' => $request->video
+                ]);
+            if ($query) {
+                return redirect('tutor');
+            } else {
+                // echo $query;
+                // dd($query);
+                return back();
+            }
         }
     }
 
@@ -105,29 +144,6 @@ class TutorController extends Controller
     }
 
     //API
-    // Get Title List
-    public function getTitleList()
-    {
-        $query = DB::table('tb_common_code')
-            ->where('hcode', '=', 'TTL')
-            ->where('code', '!=', '*')
-            ->get();
-
-        if (isset($_GET['selectedCode'])) {
-            $data = "<option value=''>- Select Title -</option>";
-            foreach ($query as $t) {
-                $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
-                $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . "</option>";
-            }
-            echo $data;
-        } else {
-            $data = "<option value=''>- Select Title -</option>";
-            foreach ($query as $t) {
-                $data .= "<option value='" . $t->code . "' >" . $t->name . "</option>";
-            }
-            echo $data;
-        }
-    }
 
     // Get Video List By Type
     public function getVideoDetail()
@@ -213,6 +229,125 @@ class TutorController extends Controller
                 $data .= "<option value='" . $t->code . "' >" . $t->name . $t->remark_1 . "</option>";
             }
             echo $data;
+        }
+    }
+
+
+    // Get Title List
+    public function getTitleList()
+    {
+        $levelList = DB::table('tb_common_code')
+            ->where('hcode', '=', 'TTL')
+            ->where('code', '!=', '*')
+            ->get();
+
+        if (isset($_GET['selectedCode'])) {
+            $data = "<option value=''>- Select Title -</option>";
+            foreach ($levelList as $t) {
+                $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
+                $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . $t->remark_1 . "</option>";
+            }
+            echo $data;
+        } else {
+            $data = "<option value=''>- Select Title -</option>";
+            foreach ($levelList as $t) {
+                $data .= "<option value='" . $t->code . "' >" . $t->name . $t->remark_1 . "</option>";
+            }
+            echo $data;
+        }
+    }
+
+    // Get Country List
+    public function getCountryList()
+    {
+        $levelList = DB::table('tb_common_code')
+            ->where('hcode', '=', 'CTGTT')
+            ->where('code', '!=', '*')
+            ->get();
+
+        if (isset($_GET['selectedCode'])) {
+            $data = "<option value=''>- Select Country -</option>";
+            foreach ($levelList as $t) {
+                $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
+                $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . $t->remark_1 . "</option>";
+            }
+            echo $data;
+        } else {
+            $data = "<option value=''>- Select Country -</option>";
+            foreach ($levelList as $t) {
+                $data .= "<option value='" . $t->code . "' >" . $t->name . $t->remark_1 . "</option>";
+            }
+            echo $data;
+        }
+    }
+
+    // Get   List
+    public function getExperienceList()
+    {
+        $levelList = DB::table('tb_common_code')
+            ->where('hcode', '=', 'EXP')
+            ->where('code', '!=', '*')
+            ->get();
+
+        if (isset($_GET['selectedCode'])) {
+            $data = "<option value=''>- Select Experience -</option>";
+            foreach ($levelList as $t) {
+                $t->code == $_GET['selectedCode'] ? $check = 'selected' : $check = '';
+                $data .= "<option value='" . $t->code . "' " . $check . " >" . $t->name . $t->remark_1 . "</option>";
+            }
+            echo $data;
+        } else {
+            $data = "<option value=''>- Select Experience -</option>";
+            foreach ($levelList as $t) {
+                $data .= "<option value='" . $t->code . "' >" . $t->name . $t->remark_1 . "</option>";
+            }
+            echo $data;
+        }
+    }
+
+    // Get Tutor List For API
+
+    public function getTutorList() {
+
+        if (isset($_GET['category'])) {
+            $category = $_GET['category'];
+        
+            $data = DB::table('tb_tutor')
+            ->orderBy('code', 'ASC')
+            ->where('category', $category)
+            ->get();
+
+            if (!$data->isEmpty()) {
+                return response()->json([
+                    'message' => 'success',
+                    'code' => 200,
+                    'data' => $data
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'failed',
+                    'code' => 204,
+                    'data' => null
+                ]);
+            }
+        } else {
+            $data = DB::table('tb_tutor')
+            ->orderBy('code', 'ASC')
+            ->get();
+
+            if (!$data->isEmpty()) {
+                return response()->json([
+                    'message' => 'success',
+                    'code' => 200,
+                    'data' => $data
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'failed',
+                    'code' => 204,
+                    'data' => null
+                ]);
+            } 
         }
     }
 }

@@ -71,20 +71,40 @@ class CommonCodeController extends Controller
 
     public function saveUpdate(request $request)
     {
-        $query = DB::table('tb_common_code')
+        // Upload Attachment
+        if ($request->file('remark_2') != null){
+            $remark_2 = $request->file('remark_2');
+            $remark_2_name = '';
+            if ($remark_2 != null) {
+                $filename = 'assets/icon/'.date("Y_m_d") . "_commoncode_" . $request->code . "_" . rand() . "_photo." . $remark_2->getClientOriginalExtension();
+                $remark_2_name = url($filename);
+                $destinationPath = public_path('assets/icon');
+                $remark_2->move($destinationPath, $remark_2_name);
+            }
+            $query = DB::table('tb_common_code')
             ->where('hcode', '=', $request->hcode)
             ->where('code', '=', $request->code)
             ->update([
                 'name' => $request->name,
                 'remark_1' => $request->remark_1,
-                'remark_2' => $request->remark_2,
+                'remark_2' => $filename,
             ]);
+        } else {
+            $query = DB::table('tb_common_code')
+            ->where('hcode', '=', $request->hcode)
+            ->where('code', '=', $request->code)
+            ->update([
+                'name' => $request->name,
+                'remark_1' => $request->remark_1
+            ]);
+        }
 
         if ($query) {
             return redirect('commoncode');
         } else {
             return back();
         }
+
     }
 
     public function delete($hcode,$code)
@@ -202,49 +222,6 @@ class CommonCodeController extends Controller
         ]);
     }
 
-    // Get Video Belajar List
-    public function getTitleList()
-    {
-        if ($_GET != null) {
-            // Verification API Token
-            if (isset($_GET['title']) && $_GET['api_token'] == 'zonaenglish2021!') {
-                $data = DB::table('tb_common_code')
-                    ->where('hcode', '=', 'TTL')
-                    ->where('code', '=', $_GET['type'])
-                    ->where('code', '!=', '*')
-                    ->get();
-
-                if (!$data->isEmpty()) {
-                    return response()->json([
-                        'message' => 'success',
-                        'code' => 200,
-                        'data' => $data
-                    ]);
-                } else {
-                    return response()->json([
-                        'message' => 'failed',
-                        'code' => 204
-                    ]);
-                }
-            } else {
-                return response()->json([
-                    'message' => 'failed',
-                    'code' => 401
-                ]);
-            }
-        } else {
-            $data = DB::table('tb_common_code')
-                    ->where('hcode', '=', 'TTL')
-                    ->where('code', '!=', '*')
-                    ->get();
-
-                    return response()->json([
-                        'message' => 'success',
-                        'code' => 200,
-                        'data' => $data
-                    ]);
-        }
-    }
 
     // Get Video List By Type
     public function getVideoListByTypeLevel()

@@ -96,15 +96,15 @@
 <script src="{{ asset('assets/plugins/jQuery/jquery-1.12.4.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
    $(document).ready(function() {
-      $.get("{{ route('videotutorial.gettitlelist') }}", function(data) {
+      $.get("{{ route('tutor.gettitlelist') }}", function(data) {
          $('#title').html(data)
       });
 
-      $.get("{{ route('videotutorial.getexperiencelist') }}", function(data) {
+      $.get("{{ route('tutor.getexperiencelist') }}", function(data) {
          $('#experience').html(data)
       });
       
-      $.get("{{ route('videotutorial.getcountrylist') }}", function(data) {
+      $.get("{{ route('tutor.getcountrylist') }}", function(data) {
          $('#country').html(data)
       });
    });
