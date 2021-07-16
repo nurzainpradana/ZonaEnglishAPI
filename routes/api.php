@@ -46,5 +46,30 @@ Route::get('getinfopromotoplist','InfoPromoController@getInfoPromoTopList');
 // Get Info Promo Detail
 Route::get('getinfopromodetail','InfoPromoController@getInfoPromoDetail');
 
-// Get Tutor List
-Route::get('gettutorlist','TutorController@getTutorList');
+// TABLE ONLINE MEETUP
+Route::get('getonlinemeetup','OnlineMeetupController@getOnlineMeetup');
+Route::get('getlistonlinemeetup','OnlineMeetupController@getListTutorVideo');
+Route::get('getdetailonlinemeetupbytype','OnlineMeetupController@getOnlineMeetupByType');
+
+//TABLE TUTOR
+Route::get('gettutorlist', 'TutorController@getTutorList');
+Route::get('getcategorytutor', 'TutorController@getCategoryTutor');
+Route::get('gettutorbycategory', 'TutorController@getTutorByCategory');
+Route::get('gettutorbycountry', 'TutorController@getTutorByCountry');
+Route::get('getscheduletutor', 'TutorController@getScheduleTutor');
+
+//TABLE SCHEDULE
+Route::get('getlistschedule', 'ScheduleController@getListSchedule');
+
+//LIVE CLASS
+Route::get('getliveclassbytype', 'LiveClassController@getLiveClassByType');
+
+// AUTH USER
+Route::group(['prefix' => 'auth'], function () {
+    Route::POST('/register-without-phone', 'Auth\UserController@registerWithOutNoPhone');
+    Route::post('/register', 'Auth\UserController@register');
+    Route::post('/login', 'Auth\UserController@login');
+    Route::post('/login-email', 'Auth\UserController@loginEmail');
+    Route::post('/logout', 'Auth\UserController@logout')
+        ->middleware('auth:sanctum');
+});

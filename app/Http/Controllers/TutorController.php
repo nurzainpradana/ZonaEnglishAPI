@@ -306,7 +306,6 @@ class TutorController extends Controller
     }
 
     // Get Tutor List For API
-
     public function getTutorList() {
 
         if (isset($_GET['category'])) {
@@ -349,5 +348,157 @@ class TutorController extends Controller
                 ]);
             } 
         }
+    }
+
+    // Save Review
+    public function saveReview(request $request)
+    {
+        // Get Last Code
+        $lastId = DB::table('tb_tutor')->where('code', 'like', 'TTR%')->select(DB::raw('max(code) as code'))->first();
+
+
+        $photo = $request->file('photo');
+        if ($photo != null) {
+            $filename = 'assets/tutor/' . date("Y_m_d") . "_tutor_" . $request->code . "_" . rand() . "_photo." . $photo->getClientOriginalExtension();
+            $photo_name = url($filename);
+            $destinationPath = public_path('assets/tutor');
+            $photo->move($destinationPath, $filename);
+        }
+
+        $query = DB::table('tb_tutor')->insert([
+            'code' => ++$lastId->code,
+            'name' => $request->name,
+            'title' => $request->title,
+            'country' => $request->country,
+            'experience' => $request->experience,
+            'experience_detail' => $request->experience_detail,
+            'price' => $request->price,
+            'discount' => $request->discount,
+            'education' => $request->education,
+            'interest' => $request->interest,
+            'spoken' => $request->spoken,
+            'video' => $request->video,
+            'photo' => $filename,
+            'rating' => 3.0,
+        ]);
+
+        if ($query) {
+            return redirect('tutor');
+        } else {
+            return back();
+        }
+    }
+	
+	//Get List Category Tutor
+    public function getCategoryTutor()
+    {
+        if ($_GET != null) {
+            // Verification API Token
+            if (isset($_GET['api_token']) && $_GET['api_token'] == 'zonaenglish2021!') {
+                $data = DB::table('tb_common_code as ct')
+                    ->where('hcode', '=', 'CTGTT')
+                    ->where('code', '!=', '*')
+                    ->get();
+
+                if (!$data->isEmpty()) {
+                    return response()->json([
+                        'message' => 'success',
+                        'code' => 200,
+                        'data' => $data
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'failed',
+                        'code' => 204
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'failed',
+                    'code' => 401
+                ]);
+            }
+        }
+        return response()->json([
+            'message' => 'failed',
+            'code' => 404
+        ]);
+    }
+	
+	// Get Tutor by Country
+    public function getTutorByCountry()
+    {
+        if ($_GET != null) {
+            // Verification API Token
+            if (isset($_GET['country']) && $_GET['api_token'] == 'zonaenglish2021!') {
+                $data = DB::table('tb_tutor')
+                    ->where('country', '=', $_GET['country'])
+                    ->get();
+
+                if (!$data->isEmpty()) {
+                    return response()->json([
+                        'message' => 'success',
+                        'code' => 200,
+                        'data' => $data
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'failed',
+                        'code' => 204,
+                        'data' => null
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'failed',
+                    'code' => 401,
+                    'data' => null
+                ]);
+            }
+        }
+        return response()->json([
+            'message' => 'failed',
+            'code' => 404,
+            'data' => null
+        ]);
+    }
+	
+	public function getScheduleTutor()
+    {
+        if ($_GET != null) {
+            // Verification API Token
+            if (isset($_GET['tutor']) && $_GET['api_token'] == 'zonaenglish2021!') {
+                $data = DB::table('tb_schedule_tutor')
+                    ->join('tb_tutor', 'tb_schedule_tutor.tutor', 'tb_tutor.code')
+                    ->select('tb_schedule_tutor.*', 'tb_tutor.code')
+                    ->where('tutor', '=', $_GET['tutor'])
+                    ->get();
+
+                if (!$data->isEmpty()) {
+                    return response()->json([
+                        'message' => 'success',
+                        'code' => 200,
+                        'data' => $data
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'failed',
+                        'code' => 204,
+                        'data' => null
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'failed',
+                    'code' => 401,
+                    'data' => null
+                ]);
+            }
+        }
+        return response()->json([
+            'message' => 'failed',
+            'code' => 404,
+            'data' => null
+        ]);
     }
 }
