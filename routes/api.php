@@ -73,3 +73,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/logout', 'Auth\UserController@logout')
         ->middleware('auth:sanctum');
 });
+
+//Update Data User
+Route::post('update-user', 'Auth\UserController@updateUser');
+Route::post('update-no_phone', 'Auth\UserController@updateNoPhone');

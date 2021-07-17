@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Resources\UserResource;
-use App\User;
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -129,5 +129,79 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Logout Success'
         ], Response::HTTP_OK);
+    }
+
+    // Update Name
+    public function updateUser(Request $request)
+    {
+        $input = $request->all();
+        $user = User::find($request->get('id'));
+
+        if (is_null($user)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $validator = Validator::make($input, [
+            'name' => 'sometimes',
+            'photo' => 'sometimes|image|mimes:jpeg,jpg,png'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()
+            ], 400);
+        }
+
+        if ($request->hasFile('photo')) {
+            if ($request->file('photo')->isValid()) {
+                $userPhoto = $request->file('photo');
+                $extension = $userPhoto->getClientOriginalExtension();
+                $userPhoto = "" . date('YmdHis') . "." . $extension;
+                $uploadPath = env('UPLOAD_PATH') . "/users";
+                $request->file('photo')->move($uploadPath, $userPhoto);
+
+                $input['photo'] = $userPhoto;
+            }
+        }
+
+        $user->update($input);
+        return response()->json([
+            'status' => true,
+            'message' => 'Success update data'
+        ]);
+    }
+
+    public function updateNoPhone(Request $request)
+    {
+        $input = $request->all();
+        $user = User::find($request->get('id'));
+
+        if (is_null($user)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $validator = Validator::make($input, [
+            'no_phone' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()
+            ], 400);
+        }
+
+        $user->update($input);
+        return response()->json([
+            'status' => true,
+            'message' => 'Success update data'
+        ]);
     }
 }
